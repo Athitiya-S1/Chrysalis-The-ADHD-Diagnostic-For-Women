@@ -1,0 +1,305 @@
+
+<!DOCTYPE html> 
+<html>
+<!-- This web-based application was designed by Athitiya Singhapan in the Freshman Research Initiative DIY Diagnostics Stream at The University of Texas at Austin. This code should not be considered a final product to diagnose medical conditions. Any user of this code does so at their own risk. Members of the DIY Stream, FRI, and The University of Texas system are not liable for anything related to this code.
+ 
+APP DESIGN BY ATHITIYA SINGHAPAN. THIS CODE SHOULD NOT BE USED TO DIAGNOSE ANY KIND OF MEDICAL CONDITION. 
+ 
+ 
+Authors in chronological order of contribution:
+Tim Riedel
+Athitiya Singhapan 
+	
+Further Information:
+http://diystream.cns.utexas.edu/
+
+Research Educator:
+Timothy Riedel
+triedel@utexas.edu
+ 
+Brief Description of Goal of Code:
+To design an app that distinugishes whether an individual has hypothyroidism or hyperthyroidism.
+Known Issues:
+No issues so far.
+	
+Ignore this error message if you see it using the javaScript console: Error with Permissions-Policy header: Origin trial controlled feature not enabled: 'interest-cohort'.
+
+References:
+https://www.w3schools.com/w3css/default.asp
+https://stackoverflow.com/questions/8211128/multiple-distinct-pages-in-one-html-file
+-->
+	
+<head> 
+<!--This sets the title of the app.-->
+      <title>Hello World</title>  
+<!--adjusts the width of the pages-->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+<!enables mobile app usage-->
+      <meta name="apple-mobile-web-app-capable" content="yes">
+<!--Imports CSS stylesheets. Remember, CSS sets the layout of the app-->
+<!--meta tags contain info about page that will not be displayed-->
+      <link rel="stylesheet" href="w3.css">
+      <link rel="stylesheet" href="w3-colors-flat.css">
+</head> 
+
+<script>
+
+	var totalQuestions = 8;
+//I had to add this variable in order to ensure that both of the percentages added to a 100//
+        var hyperthyroidism_count = 0;
+//var is used to declare variables, values, and what you want the variable to do//
+//In this case is used to declare the value of hyperthyroidism starts at 0//
+        var hypothyroidism_count = 0;
+//var is used to declare variables, values, and what you want the variable to do//
+//In this case is used to declare the value of hypothyroidism starts at 0//
+
+
+        function hyperthyroidismAdd(){
+            hyperthyroidism_count = hyperthyroidism_count + 1;
+//Increases the count for hyperthyroidism//
+        }
+
+        function hypothyroidismAdd(){
+            hypothyroidism_count = hypothyroidism_count + 1;
+//Increases the count for hypothyroidism//
+        }
+
+	function getResult() {
+//Dsiplays and calculates percentages//
+		var hyperthyroidismPercent=(hyperthyroidism_count/totalQuestions)*100;
+	//Divides hyperthyroidism count by 8(number of question) and turns into percentage//
+		var hypothyroidismPercent = (hypothyroidism_count/totalQuestions)*100;
+	//Divides hypothyroidism count by 8(number of question) and turns into percentage//
+		var totalPercent = hyperthyroidismPercent + hypothyroidismPercent;
+	
+	//I noticed that if you go to a previous question and answer the percentage exceed the 100 percent value. So I looked up how to fix this//
+	//Check if combined total is not equal to 100//
+    		 if (totalPercent !== 100) {
+	//Functions to fix percentages if they do not equal 100//
+        		var scale = 100 / totalPercent;
+	//Scales both variables so they equal to 100//
+       			hyperthyroidismPercent *= scale;
+			hypothyroidismPercent *= scale;
+		}
+	
+	var resultText = document.getElementById("resultText");
+	//Function to display the results//
+		resultText.innerHTML = "Probability it is hyperthyroidism = " + hyperthyroidismPercent.toFixed(2) + "%<br> Probability it is hypothyroidism = " + hypothyroidismPercent.toFixed(2) + "%";
+	//Added the percentage signs//
+	//Tells the system how to display results. Two decimal points enabled//
+
+	}
+	function restartTest(){
+	//Function to restart the test
+ 		hyperthyroidism_count = 0;
+		hypothyroidism_count = 0;
+    	//Reset the counts of the variables//
+    		location.href = "#content0";
+	//Send the person back to the first page//
+	}
+
+
+
+</script>	
+
+
+<!-- THIS STYLE CODE HELPS MAKE YOUR APP LOOK GOOD. PROBABLY DONT MESS WITH IT -->
+<style>	
+.body {
+     margin: 0em;
+}
+
+.page {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -100vw;
+    overflow-y: auto;
+    z-index: 0;
+    background-color: hsl(0,0%,100%);
+}
+
+  .page:target {
+    left: 0vw;
+    z-index: 1;
+}
+
+  	img, object{
+        max-height:90%;
+        max-width:90%;
+        	}
+
+</style>
+
+<body>
+<!--Div tags specify divisions in the body (big format changes and specific CSS commands at a specific division-->
+	<div id="header" class="w3-container w3-flat-carrot">
+	<h1>Hyperthyroidism or hypothyroidism?</h1>
+</div>
+	
+	<div id="content" class="w3-container">
+	<p>Are you experiencing hyperthyroidism OR hypothyroidism? Answer a few short questions to find out!</p>
+
+<!--Add image on this page-->
+<!--src - Specifies the path to the image
+alt - Specifies an alternate text for the image-->
+<!--this code introduces the image and centers it on the page-->	
+	<div class="w3-container w3-center">
+<!--this code shows the image and gives it an ID and dimensions-->
+	<img id="ResizablePhoto"
+	src="https://media.istockphoto.com/id/1357569707/vector/happy-kawaii-thyroid-gland-character-drawing-of-a-smile-thyroid-gland-vector-illustration.jpg?s=612x612&w=0&k=20&c=K0C17RFFeiU7-my2GJs-WSVOZtJAxkpgVNBDre9T9A4="
+	alt="Thyroid" 
+	style="width: 300px; height: auto;">
+	</div>
+<!--Auto height enables for the image to resize itself when displayed on a phone or smaller device.-->
+
+	
+<!-- The person taking this quiz has definitely seen better days, otherwise... they wouldn't have taken this quiz in the first place. To make them feel better,
+I want to make the buttons rainbow themed! So that's what I'll change it to... ROYGBIV color alterations! Take that, green leprechaun!-->
+	
+
+	<a href="#one" class="w3-btn w3-red w3-round"> Get Started </a>
+	
+	<p>The following app has been designed by Athitiya Singhapan of the Freshman Research Initiative DIY Diagnostics Stream at The University of Texas at Austin. This web-based app is shared for demonstration purposes and may used as an aid to better understand your symptoms but should NOT be used to formerly diagnose medical conditions. </p>
+ 	
+
+<!--This is page one-->
+	<div class="page" id="one">
+	<div id="header" class="w3-container w3-flat-carrot">
+		<h1>Question 1</h1>
+	</div>
+	
+    	<div id="content" class="w3-container">
+        <p>Are you noticing thinning of your hair and nails?</p>    
+	<a href="#two" onclick="hyperthyroidismAdd();" class="w3-btn w3-orange"> Yes</a>
+	<a href="#two" onclick="hypothyroidismAdd();" class="w3-btn w3-yellow">No</a>
+
+    	</div>
+
+</div>
+<!--This is page two-->
+	<div class="page" id="two">
+	<div class="w3-container w3-flat-carrot">
+		<h1>Question 2</h1>
+	</div>
+	
+	<div id="content" class="w3-container">
+		<p>Are you experiencing frequent bowel movements or diarrhea?</p>
+	<a href="#three" onclick="hyperthyroidismAdd();" class="w3-btn w3-green"> Yes</a>
+	<a href="#three" onclick="hypothyroidismAdd();" class="w3-btn w3-blue">No</a>
+
+	</div>
+<!--This is page three-->
+	<div class="page" id="three">
+	<div id="header" class="w3-container w3-flat-carrot">
+		<h1>Question 3</h1>
+	</div>
+	
+    	<div id="content" class="w3-container">
+        <p>Are you experiencing anxiety, nervousness, or irritability?</p>    
+	<a href="#four" onclick="hyperthyroidismAdd();" class="w3-btn w3-purple"> Yes</a>
+	<a href="#four" onclick="hypothyroidismAdd();" class="w3-btn w3-red">No</a>
+
+</div>	
+<!--This is page four-->
+
+	<div class="page" id="four">
+	<div id="header" class="w3-container w3-flat-carrot">
+		<h1>Question 4</h1>
+	</div>
+	
+    	<div id="content" class="w3-container">
+        <p>Are you experiencing fatigue, lethargy, and depression?</p>  
+	<a href="#five" onclick="hypothyroidismAdd();" class="w3-btn w3-orange"> Yes</a>
+	<a href="#five" onclick="hyperthyroidismAdd();" class="w3-btn w3-yellow">No</a>
+ </div>
+<!--This is page five-->
+		<div class="page" id="five">
+		<div id="header" class="w3-container w3-flat-carrot">
+		<h1>Question 5</h1>
+		</div>
+
+    	<div id="content" class="w3-container">
+			</div>
+        <p>Have you been experiencing constipation when using the restroom?</p>    
+	<a href="#six" onclick="hypothyroidismAdd();" class="w3-btn w3-green"> Yes</a>
+	<a href="#six" onclick="hyperthyroidismAdd();" class="w3-btn w3-blue">No</a>
+	</div>
+	
+<!--This is page six-->
+		<div class="page" id="six">
+		<div id="header" class="w3-container w3-flat-carrot">
+		<h1>Question 6</h1>	
+		</div>
+	
+		<div id="content" class="w3-container">
+					</div>
+		<p>Are you experiencing thickening of the skin and hair?</p>
+		<a href="#seven" onclick="hypothyroidismAdd();" class="w3-btn w3-purple"> Yes</a>
+		<a href="#seven" onclick="hyperthyroidismAdd();" class="w3-btn w3-pink"> No</a>		
+		 </div><!-- /content -->
+
+		
+		<div class="page" id="seven">
+	<div id="header" class="w3-container w3-flat-carrot">
+		<h1>Question 7</h1>
+		</div>
+
+    	<div id="content" class="w3-container">
+			</div>		
+        <p>Do you experience cold intolerance and dry skin?</p>    
+	<a href="#eight" onclick="hypothyroidismAdd();" class="w3-btn w3-red"> Yes</a>
+	<a href="#eight" onclick="hyperthyroidismAdd();" class="w3-btn w3-orange">No</a>
+
+	</div>
+	
+<!--I am adding one last question, which I arguably think is one of the most important ones!-->
+</div>
+		 </div>
+	
+		<div class="page" id="eight">
+	<div id="header" class="w3-container w3-flat-carrot">
+		<h1>Question 8</h1>
+		</div>
+
+    	<div id="content" class="w3-container">
+			</div>
+        <p>Are you experiencing heat intolerance and excessive sweating?</p>    
+	
+	<a href="#results" onclick="hyperthyroidismAdd();" class="w3-btn w3-yellow"> Yes</a>
+	<a href="#results" onclick="hypothyroidismAdd();" class="w3-btn w3-green">No</a>
+
+</div>
+		 </div>
+
+	<div class="page" id="results">
+	<div id="header" class="w3-container w3-flat-carrot">
+		<h1>Results</h1>
+	</div>
+
+<!--Page eight is for displaying results
+Results will be displayed and computed after hitting the "See Results" button on page-->
+	
+	<div id="content" class="w3-container">
+			<p>Click the button below to find out if you are experiencing hyperthyroidism or hypothyroidism! I hope you feel better soon, and be sure to consult with your physician to screen for underlying thyroid problems!</p>
+		</div>
+	<div id="resultContainer" class="w3-container">
+		<button onclick="getResult();" class="w3-button w3-white w3-round w3-hover-green"><b>Results</b></button>
+		<!--Button to get the result using the variables stated above-->	
+		<p id="resultText"></p>
+		<button onclick="restartTest();" class="w3-button w3-white w3-round w3-hover-red"><b>Restart Test</b></button>
+		<!--Button and location so the function can perform the action--> 	
+		
+	</div>
+
+
+
+	<footer class="w3-bottom w3-container w3-flat-carrot">
+	<p>I love DIY!</p>
+	</footer>
+
+
+	
+</body>
+</html>
