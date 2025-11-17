@@ -1,15 +1,13 @@
-
 <!DOCTYPE html> 
-<html>
-<!-- This web-based application was designed by Athitiya Singhapan in the Freshman Research Initiative DIY Diagnostics Stream at The University of Texas at Austin. This code should not be considered a final product to diagnose medical conditions. Any user of this code does so at their own risk. Members of the DIY Stream, FRI, and The University of Texas system are not liable for anything related to this code.
+<html> <!-- contains html content -->
+<!-- The following code has been developed by students and/or researchers of the Freshman Research Initiative DIY Diagnostics Stream at The University of Texas at Austin.  This code is shared for demonstration purposes and should not be considered a product -- it is for entertainment purposes only.  Any user of this code does so at their own risk. Members of the DIY Stream, FRI, and The University of Texas system are not liable for anything related to this code.
  
-APP DESIGN BY ATHITIYA SINGHAPAN. THIS CODE SHOULD NOT BE USED TO DIAGNOSE ANY KIND OF MEDICAL CONDITION. 
+THIS CODE SHOULD NOT BE USED TO DIAGNOSE ANY KIND OF MEDICAL CONDITION.
  
  
-Authors in chronological order of contribution:
-Tim Riedel
-Athitiya Singhapan 
-	
+Authors:
+Athitiya Singhapan
+
 Further Information:
 http://diystream.cns.utexas.edu/
 
@@ -18,11 +16,10 @@ Timothy Riedel
 triedel@utexas.edu
  
 Brief Description of Goal of Code:
-To design an app that distinugishes whether an individual has hypothyroidism or hyperthyroidism.
+The goal of this code is to determine the probability that an individual has ADHD.
+ 
 Known Issues:
-No issues so far.
-	
-Ignore this error message if you see it using the javaScript console: Error with Permissions-Policy header: Origin trial controlled feature not enabled: 'interest-cohort'.
+There are no known issues in this code.
 
 References:
 https://www.w3schools.com/w3css/default.asp
@@ -30,275 +27,876 @@ https://stackoverflow.com/questions/8211128/multiple-distinct-pages-in-one-html-
 -->
 	
 <head> 
-<!--This sets the title of the app.-->
-      <title>Chrysalis: Holistic Evaluation of ADHD</title>  
-<!--adjusts the width of the pages-->
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-<!enables mobile app usage-->
-      <meta name="apple-mobile-web-app-capable" content="yes">
-<!--Imports CSS stylesheets. Remember, CSS sets the layout of the app-->
-<!--meta tags contain info about page that will not be displayed-->
-      <link rel="stylesheet" href="w3.css">
-      <link rel="stylesheet" href="w3-colors-flat.css">
+	<title> Chrysalis: The ADHD App-Based Diagnostic </title>  
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<link rel="stylesheet" href="w3.css">
+	<link rel="stylesheet" href="w3-colors-flat.css">
 </head> 
 
-<script>
+<script> // contains javascript content
 
-	var totalQuestions = 8;
-//I had to add this variable in order to ensure that both of the percentages added to a 100//
-        var hyperthyroidism_count = 0;
-//var is used to declare variables, values, and what you want the variable to do//
-//In this case is used to declare the value of hyperthyroidism starts at 0//
-        var hypothyroidism_count = 0;
-//var is used to declare variables, values, and what you want the variable to do//
-//In this case is used to declare the value of hypothyroidism starts at 0//
+var ADHD_count = 0; // Store the current total score
+var previousScores = []; // Store scores for each page visited
 
+function ADHDAdd0(page) {
+    updateScore(0, page);
+}
 
-        function hyperthyroidismAdd(){
-            hyperthyroidism_count = hyperthyroidism_count + 1;
-//Increases the count for hyperthyroidism//
-        }
+function ADHDAdd1(page) {
+    updateScore(1, page);
+}
 
-        function hypothyroidismAdd(){
-            hypothyroidism_count = hypothyroidism_count + 1;
-//Increases the count for hypothyroidism//
-        }
+function ADHDAdd2(page) {
+    updateScore(2, page);
+}
 
-	function getResult() {
-//Dsiplays and calculates percentages//
-		var hyperthyroidismPercent=(hyperthyroidism_count/totalQuestions)*100;
-	//Divides hyperthyroidism count by 8(number of question) and turns into percentage//
-		var hypothyroidismPercent = (hypothyroidism_count/totalQuestions)*100;
-	//Divides hypothyroidism count by 8(number of question) and turns into percentage//
-		var totalPercent = hyperthyroidismPercent + hypothyroidismPercent;
-	
-	//I noticed that if you go to a previous question and answer the percentage exceed the 100 percent value. So I looked up how to fix this//
-	//Check if combined total is not equal to 100//
-    		 if (totalPercent !== 100) {
-	//Functions to fix percentages if they do not equal 100//
-        		var scale = 100 / totalPercent;
-	//Scales both variables so they equal to 100//
-       			hyperthyroidismPercent *= scale;
-			hypothyroidismPercent *= scale;
-		}
-	
-	var resultText = document.getElementById("resultText");
-	//Function to display the results//
-		resultText.innerHTML = "Probability it is hyperthyroidism = " + hyperthyroidismPercent.toFixed(2) + "%<br> Probability it is hypothyroidism = " + hypothyroidismPercent.toFixed(2) + "%";
-	//Added the percentage signs//
-	//Tells the system how to display results. Two decimal points enabled//
+function ADHDAdd3(page) {
+    updateScore(3, page);
+}
 
-	}
-	function restartTest(){
-	//Function to restart the test
- 		hyperthyroidism_count = 0;
-		hypothyroidism_count = 0;
-    	//Reset the counts of the variables//
-    		location.href = "#content0";
-	//Send the person back to the first page//
-	}
+function ADHDAdd4(page) {
+    updateScore(4, page);
+}
 
+function updateScore(points, page) {
+    // This code prevents double counting
+    if (previousScores[page] !== undefined) {
+        ADHD_count -= previousScores[page]; 
+    }
+    
+    // Add the new points for the current page
+    ADHD_count += points; 
+    previousScores[page] = points; // Store the points for this page
+}
 
+function goBack(page) {
+    // Reset the score for the current page when going back
+    if (previousScores[page] !== undefined) {
+        ADHD_count -= previousScores[page]; // Remove the score for the current page
+        previousScores[page] = undefined; // Clear the stored score for this page
+    }
+}
+
+function getResults() {
+    var resultText = document.getElementById("results");
+    resultText.innerHTML = "<strong>Your score is: " + ADHD_count + "</strong><br><br>";
+
+    var additionalText = 
+        "<strong>0-24</strong> - Suggests fewer traits commonly linked to ADHD.<br><br>" +
+        "<strong>Above 24</strong> - Suggests a higher likelihood of traits commonly linked to ADHD.<br><br>" +
+        "Click <strong>Next</strong> to read a detailed explanation of what your score means.";
+    resultText.innerHTML += additionalText;
+
+    document.getElementById("nextButton").style.display = "inline";
+}
+
+function saveInterpretation() {
+    var interpretationResult = "";
+
+    if (autistic_count > 83) {
+        interpretationResult = "<p>Based upon your responses, it seems <strong>you may experience challenges similar to individuals with ADHD.</strong> <br><br> People with scores like yours often qualify for an ADHD diagnosis. <br><br> <strong>Please note:</strong> This assessment is not a definitive diagnosis or a recommendation for treatment. If you have concerns about ADHD or related issues, we encourage you to seek guidance from a qualified mental health professional.</p>";
+    } else {
+        interpretationResult = "<p>Based upon your responses, it seems <strong>you may not meet the criteria for an ADHD diagnosis.</strong> <br><br> <strong>Please remember:</strong> This assessment is a screening tool and not a formal diagnosis. Only a qualified mental health professional can provide a diagnosis for ADHD or any other mental health condition. <br></p>";
+    }
+
+    localStorage.setItem("interpretationResult", interpretationResult);
+}
 
 </script>	
 
 
 <!-- THIS STYLE CODE HELPS MAKE YOUR APP LOOK GOOD. PROBABLY DONT MESS WITH IT -->
 <style>	
-.body {
-     margin: 0em;
+	body {
+		margin: 0em;
+	}
+
+	.page {
+    		width: 100vw;
+    		height: 100vh;
+    		position: fixed;
+    		top: 0;
+    		left: -100vw;
+    		overflow-y: auto;
+    		z-index: 0;
+    		background-color: #FFFBFF;
+	}
+
+	
+	.starting-page { /* change background-color to the same as the other pages */
+		background-color: #FFFBFF;
+	}
+
+  	.page:target {
+    		left: 0vw;
+   		 z-index: 1;
+	}
+
+	img, object{
+            	display: block; /* Ensure image is block-level */
+   		margin: 20px auto; /* Center horizontally with automatic margins */
+		max-height: 40%;
+        	max-width:40%;
+		border: 5px solid #B8849D;
+		border-radius: 8px;
+        	} <!-- resize image -->
+
+
+	/* Center all headers orizontally */
+	h1 {
+		text-align: center;
+	}
+
+
+	/* Flexbox to center header content */
+	#header {
+		display: flex;
+		justify-content: center; /* Center horizontally */
+	}
+
+	/* Flexbox to center content */
+	#content {
+   		display: flex;
+		flex-direction: column; /* Stack buttons vertically */
+    		justify-content: center; /* Center buttons vertically within this div */
+    		align-items: center; /* Center buttons horizontally within this div */
+		height: calc(100vh - 100px); /* Adjust height to fill the remaining space */
+ 
+	}
+
+	
+/* Flexbox to center content */
+#content2 {
+    display: flex;
+    flex-direction: column; /* Stack buttons and text vertically */
+    justify-content: center; /* Center vertically within each box */
+    align-items: center; /* Center horizontally within each box */
+    min-height: 200px; /* Set a minimum height for each box to be consistent */
+    padding: 10px;
+    text-align: center;
 }
 
-.page {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: -100vw;
-    overflow-y: auto;
-    z-index: 0;
-    background-color: hsl(0,0%,100%);
+/* Consistent height for buttons */
+.w3-btn {
+    height: 40px; /* Set a fixed height for buttons */
+    display: flex;
+    align-items: center; /* Center text vertically within button */
+    justify-content: center; /* Center text horizontally within button */
 }
 
-  .page:target {
-    left: 0vw;
-    z-index: 1;
+/* Ensuring paragraph text aligns consistently */
+#content2 p {
+    margin: 0;
+    flex-grow: 1; /* Allow text to take up equal space */
+    display: flex;
+    align-items: center; /* Center vertically */
+}
+	
+	
+	#resources {
+    	display: flex;
+    	flex-direction: row; /* Arrange items in a horizontal row */
+    	justify-content: center; /* Center items horizontally within this div */
+   	 align-items: center; /* Center items vertically within this div */
+	}
+	
+
+
+	#content p {
+    		text-align: center; /* Center the text inside each paragraph */
+		margin-left: 10%;
+		margin-right: 10%;
+		font-size: 18 px;
+		}
+	
+	
+	#backButton {
+	margin-top: 30px;
 }
 
-  	img, object{
-        max-height:90%;
-        max-width:90%;
-        	}
+
+	.w3-btn {
+    margin: 10px; /* Adjust the margin value as needed */
+	}
+
+
+		#results {
+		margin-bottom: 10px; /* Adjust this value to reduce space */
+		text-align: center; /* Center the results text */
+	}
+
+	#nextButton {
+		display: none; /* Initially hidden, then displayed in JavaScript */
+		margin-top: 10px; /* Adjust this value to control the space */
+		text-align: center;
+	}
+
+
+/* Add a media query for mobile view */
+@media (max-width: 1100px) {
+    #resources {
+        flex-direction: column; /* Stack content2 divs vertically */
+    }
+    #content p, #content2 p { 
+        font-size: 16px; /* Make text smaller on mobile */
+	margin-left: 4%;
+	margin-right: 4%;
+    }	
+
+	.w3-btn {
+		font-size: 16px;
+	}
+
+	#backButton {
+		font-size: 16px;
+	}
+
+	#header h1 {
+	text-align: center;
+	font-size: 24px;
+	}
+
+	#resources #content2 {
+		margin-top: -7%;
+	}
+
+	
+	#resources p {
+		margin-top: -9%;
+	}
+
+	#resources-blurb {
+    		margin-bottom: 7%; /* Adjust the margin size as needed */
+		}
+
+}
 
 </style>
 
+<!-- STARTING PAGE -->
+
 <body>
-<!--Div tags specify divisions in the body (big format changes and specific CSS commands at a specific division-->
-	<div id="header" class="w3-container w3-flat-carrot">
-	<h1>Hyperthyroidism or hypothyroidism?</h1>
+<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+	<h1>Chrysalis: The ADHD App-Based Diagnostic </strong></h1> <!-- header title -->
 </div>
 	
-	<div id="content" class="w3-container">
-	<p>Are you experiencing hyperthyroidism OR hypothyroidism? Answer a few short questions to find out!</p>
+<div class="starting-page" id="content" class="w3-container"> <!-- contains text content -->
+	<p>Welcome to <strong>Chrysalis</strong>! This assessment is designed to identify behaviors and abilities in both male and female individuals aged 18 and older that may be associated with ADHD.</p> <!-- intro paragraph -->
 
-<!--Add image on this page-->
-<!--src - Specifies the path to the image
-alt - Specifies an alternate text for the image-->
-<!--this code introduces the image and centers it on the page-->	
-	<div class="w3-container w3-center">
-<!--this code shows the image and gives it an ID and dimensions-->
-	<img id="ResizablePhoto"
-	src="https://media.istockphoto.com/id/1357569707/vector/happy-kawaii-thyroid-gland-character-drawing-of-a-smile-thyroid-gland-vector-illustration.jpg?s=612x612&w=0&k=20&c=K0C17RFFeiU7-my2GJs-WSVOZtJAxkpgVNBDre9T9A4="
-	alt="Thyroid" 
-	style="width: 300px; height: auto;">
-	</div>
-<!--Auto height enables for the image to resize itself when displayed on a phone or smaller device.-->
-
+	<p><strong>Estimated time:</strong> <strong>5-7</strong> minutes to answer <strong>25</strong> questions. <br>
+	Please read each statement carefully and indicate how much you agree or disagree. <br> 
+	Your responses are confidential.</p> <!-- instructions paragraph -->
 	
-<!-- The person taking this quiz has definitely seen better days, otherwise... they wouldn't have taken this quiz in the first place. To make them feel better,
-I want to make the buttons rainbow themed! So that's what I'll change it to... ROYGBIV color alterations! Take that, green leprechaun!-->
+	<a href="#one" class="w3-btn w3-flat-newbutton w3-round"> Get started </a> <!-- button that links to question 1 when clicked -->
 	
 
-	<a href="#one" class="w3-btn w3-red w3-round"> Get Started </a>
-	
-	<p>The following app has been designed by Athitiya Singhapan of the Freshman Research Initiative DIY Diagnostics Stream at The University of Texas at Austin. This web-based app is shared for demonstration purposes and may used as an aid to better understand your symptoms but should NOT be used to formerly diagnose medical conditions. </p>
- 	
+<img src="autism-adults-stock-photo.jpg" alt="ADHD butterfly symbol" style="display:block; margin-top:20px;"> <!-- add image showing butterfly source: https://www.istockphoto.com/vector/neurodiversity-in-women-autism-adhd-female-brain-gm1944350137-556804794  -->
 
-<!--This is page one-->
-	<div class="page" id="one">
-	<div id="header" class="w3-container w3-flat-carrot">
-		<h1>Question 1</h1>
+<!--
+	<p>The following code has been developed by students and/or researchers of the Freshman Research Initiative DIY Diagnostics Stream at The University of Texas at Austin. Members of the DIY Stream, FRI, and The University of Texas system are not liable for anything related to this code. THIS CODE SHOULD NOT BE USED TO DIAGNOSE ANY KIND OF MEDICAL CONDITION.</p> <!-- disclaimer -->
+
+</div> <!-- added closing div tag to fix footer; missing in original code -->
+
+<!-- QUESTION 1 PAGE -->
+<div class="page" id="one"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>1/25</strong> | Imagination and play</h1> <!-- header title -->
 	</div>
 	
-    	<div id="content" class="w3-container">
-        <p>Are you noticing thinning of your hair and nails?</p>    
-	<a href="#two" onclick="hyperthyroidismAdd();" class="w3-btn w3-orange"> Yes</a>
-	<a href="#two" onclick="hypothyroidismAdd();" class="w3-btn w3-yellow">No</a>
+    	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I enjoy immersing myself in fantasy worlds, such as books, video games, or other media.</p> <!-- question 1 text -->    
+		<a href="#two"  onclick="autisticAdd1(1);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to question 2 when clicked & adds 1 to autism count -->
+         	<a href="#two"  onclick="autisticAdd2(1);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to question 2 when clicked & adds 2 to autism count -->
+		<a href="#two"  onclick="autisticAdd3(1);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to question 2 when clicked & adds 3 to autism count -->
+		<a href="#two"  onclick="autisticAdd4(1);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to question 2 when clicked & adds 4 to autism count -->
+		<a href="#two"  onclick="autisticAdd5(1);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to question 2 when clicked & adds 5 to autism count -->
 
-    	</div>
+		<a href="#header" id="backButton" ><-- Previous</a> <!-- button that links to previous page -->
 
+ 	</div>
 </div>
-<!--This is page two-->
-	<div class="page" id="two">
-	<div class="w3-container w3-flat-carrot">
-		<h1>Question 2</h1>
+
+<!-- QUESTION 2 PAGE -->
+<div class="page" id="two"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>2/25</strong> | Imagination and play</h1> <!-- header title -->
 	</div>
 	
-	<div id="content" class="w3-container">
-		<p>Are you experiencing frequent bowel movements or diarrhea?</p>
-	<a href="#three" onclick="hyperthyroidismAdd();" class="w3-btn w3-green"> Yes</a>
-	<a href="#three" onclick="hypothyroidismAdd();" class="w3-btn w3-blue">No</a>
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I have a strong interest in fictional stories, books, movies, or TV shows.</p> <!-- question 2 text -->
+		<a href="#three"  onclick="autisticAdd1(2);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to question 3 when clicked & adds 1 to autism count -->
+         	<a href="#three"  onclick="autisticAdd2(2);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to question 3 when clicked & adds 2 to autism count -->
+		<a href="#three"  onclick="autisticAdd3(2);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to question 3 when clicked & adds 3 to autism count -->
+		<a href="#three"  onclick="autisticAdd4(2);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to question 3 when clicked & adds 4 to autism count -->
+		<a href="#three"  onclick="autisticAdd5(2);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to question 3 when clicked & adds 5 to autism count -->
+
+		<a href="#one" id="backButton" onclick="goBack(1);"><-- Previous</a> <!-- button that links to previous page -->
 
 	</div>
-<!--This is page three-->
-	<div class="page" id="three">
-	<div id="header" class="w3-container w3-flat-carrot">
-		<h1>Question 3</h1>
-	</div>
-	
-    	<div id="content" class="w3-container">
-        <p>Are you experiencing anxiety, nervousness, or irritability?</p>    
-	<a href="#four" onclick="hyperthyroidismAdd();" class="w3-btn w3-purple"> Yes</a>
-	<a href="#four" onclick="hypothyroidismAdd();" class="w3-btn w3-red">No</a>
-
 </div>	
-<!--This is page four-->
 
-	<div class="page" id="four">
-	<div id="header" class="w3-container w3-flat-carrot">
-		<h1>Question 4</h1>
+<!-- QUESTION 3 PAGE -->
+<div class="page" id="three"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>3/25</strong> | Imagination and play</h1> <!-- header title -->
 	</div>
 	
-    	<div id="content" class="w3-container">
-        <p>Are you experiencing fatigue, lethargy, and depression?</p>  
-	<a href="#five" onclick="hypothyroidismAdd();" class="w3-btn w3-orange"> Yes</a>
-	<a href="#five" onclick="hyperthyroidismAdd();" class="w3-btn w3-yellow">No</a>
- </div>
-<!--This is page five-->
-		<div class="page" id="five">
-		<div id="header" class="w3-container w3-flat-carrot">
-		<h1>Question 5</h1>
-		</div>
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>At any point in my life, I played imaginatively, similar to others my age.</p> <!-- question 3 text -->
+		<a href="#four"  onclick="autisticAdd1(3);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to question 4 when clicked & adds 1 to autism count -->
+         	<a href="#four"  onclick="autisticAdd2(3);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to question 4 when clicked & adds 2 to autism count -->
+		<a href="#four"  onclick="autisticAdd3(3);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to question 2 when clicked & adds 3 to autism count -->
+		<a href="#four"  onclick="autisticAdd4(3);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to question 4 when clicked & adds 4 to autism count -->
+		<a href="#four"  onclick="autisticAdd5(3);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to question 4 when clicked & adds 5 to autism count -->
 
-    	<div id="content" class="w3-container">
-			</div>
-        <p>Have you been experiencing constipation when using the restroom?</p>    
-	<a href="#six" onclick="hypothyroidismAdd();" class="w3-btn w3-green"> Yes</a>
-	<a href="#six" onclick="hyperthyroidismAdd();" class="w3-btn w3-blue">No</a>
-	</div>
-	
-<!--This is page six-->
-		<div class="page" id="six">
-		<div id="header" class="w3-container w3-flat-carrot">
-		<h1>Question 6</h1>	
-		</div>
-	
-		<div id="content" class="w3-container">
-					</div>
-		<p>Are you experiencing thickening of the skin and hair?</p>
-		<a href="#seven" onclick="hypothyroidismAdd();" class="w3-btn w3-purple"> Yes</a>
-		<a href="#seven" onclick="hyperthyroidismAdd();" class="w3-btn w3-pink"> No</a>		
-		 </div><!-- /content -->
-
-		
-		<div class="page" id="seven">
-	<div id="header" class="w3-container w3-flat-carrot">
-		<h1>Question 7</h1>
-		</div>
-
-    	<div id="content" class="w3-container">
-			</div>		
-        <p>Do you experience cold intolerance and dry skin?</p>    
-	<a href="#eight" onclick="hypothyroidismAdd();" class="w3-btn w3-red"> Yes</a>
-	<a href="#eight" onclick="hyperthyroidismAdd();" class="w3-btn w3-orange">No</a>
+		<a href="#two" id="backButton" onclick="goBack(2);"><-- Previous</a> <!-- button that links to previous page -->
 
 	</div>
+</div>	
+
+<!-- QUESTION 4 PAGE -->
+<div class="page" id="four"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>4/25</strong> | Imagination and play</h1> <!-- header title -->
+	</div>
 	
-<!--I am adding one last question, which I arguably think is one of the most important ones!-->
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I have had imaginary friends or animals during my childhood or adulthood.</p> <!-- question 4 text -->
+		<a href="#five"  onclick="autisticAdd1(4);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to question 5 when clicked & adds 1 to autism count -->
+         	<a href="#five"  onclick="autisticAdd2(4);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to question 5 when clicked & adds 2 to autism count -->
+		<a href="#five"  onclick="autisticAdd3(4);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to question 2 when clicked & adds 3 to autism count -->
+		<a href="#five"  onclick="autisticAdd4(4);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to question 5 when clicked & adds 4 to autism count -->
+		<a href="#five"  onclick="autisticAdd5(4);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to question 5 when clicked & adds 5 to autism count -->
+
+		<a href="#three" id="backButton" onclick="goBack(3);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
 </div>
-		 </div>
-	
-		<div class="page" id="eight">
-	<div id="header" class="w3-container w3-flat-carrot">
-		<h1>Question 8</h1>
-		</div>
 
-    	<div id="content" class="w3-container">
-			</div>
-        <p>Are you experiencing heat intolerance and excessive sweating?</p>    
+<!-- QUESTION 5 PAGE -->
+<div class="page" id="five"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>5/25</strong> | Imagination and play</h1> <!-- header title -->
+	</div>
 	
-	<a href="#results" onclick="hyperthyroidismAdd();" class="w3-btn w3-yellow"> Yes</a>
-	<a href="#results" onclick="hypothyroidismAdd();" class="w3-btn w3-green">No</a>
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>At any point in my life, I created my own complex ‘set ups’ with toys or objects.</p> <!-- question 5 text -->
+		<a href="#six"  onclick="autisticAdd1(5);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to question 6 when clicked & adds 1 to autism count -->
+         	<a href="#six"  onclick="autisticAdd2(5);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to question 6 when clicked & adds 2 to autism count -->
+		<a href="#six"  onclick="autisticAdd3(5);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to question 6 when clicked & adds 3 to autism count -->
+		<a href="#six"  onclick="autisticAdd4(5);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to question 6 when clicked & adds 4 to autism count -->
+		<a href="#six"  onclick="autisticAdd5(5);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to question 6 when clicked & adds 5 to autism count -->
+
+		<a href="#four" id="backButton" onclick="goBack(4);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+<!-- QUESTION 6 PAGE -->
+<div class="page" id="six"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>6/25</strong> | Camouflaging</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I mimic or adopt the behaviors, speech patterns, or mannerisms of other female-presenting individuals to fit in social situations.</p> <!-- question 6 text -->
+		<a href="#seven"  onclick="autisticAdd1();" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to question 7 when clicked & adds 1 to autism count -->
+         	<a href="#seven"  onclick="autisticAdd2(6);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to question 7 when clicked & adds 2 to autism count -->
+		<a href="#seven"  onclick="autisticAdd3(6);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to question 7 when clicked & adds 3 to autism count -->
+		<a href="#seven"  onclick="autisticAdd4(6);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to question 7 when clicked & adds 4 to autism count -->
+		<a href="#seven"  onclick="autisticAdd5(6);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to question 7 when clicked & adds 5 to autism count -->
+
+		<a href="#five" id="backButton" onclick="goBack(5);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 7 PAGE -->
+<div class="page" id="seven"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>7/25</strong> | Camouflaging</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I closely observe how other female-presenting individuals interact and socialize, often identifying their behaviors to understand social norms.</p> <!-- question 7 text -->
+		<a href="#eight"  onclick="autisticAdd1(7);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#eight"  onclick="autisticAdd2(7);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#eight"  onclick="autisticAdd3(7);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#eight"  onclick="autisticAdd4(7);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#eight"  onclick="autisticAdd5(7);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#six" id="backButton" onclick="goBack(6);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 8 PAGE -->
+<div class="page" id="eight"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>8/25</strong> | Camouflaging</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I often follow the lead of others in social situations to avoid standing out or making mistakes.</p> <!-- question 8 text -->
+		<a href="#nine"  onclick="autisticAdd1(8);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#nine"  onclick="autisticAdd2(8);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#nine"  onclick="autisticAdd3(8);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#nine"  onclick="autisticAdd4(8);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#nine"  onclick="autisticAdd5(8);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#seven" id="backButton" onclick="goBack(7);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 9 PAGE -->
+<div class="page" id="nine"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>9/25</strong> | Camouflaging</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I change my behavior, speech, or appearance depending on the social setting to avoid standing out.</p> <!-- question 9 text -->
+		<a href="#ten"  onclick="autisticAdd1(9);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#ten"  onclick="autisticAdd2(9);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#ten"  onclick="autisticAdd3(9);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#ten"  onclick="autisticAdd4(9);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#ten"  onclick="autisticAdd5(9);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#eight" id="backButton" onclick="goBack(8);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 10 PAGE -->
+<div class="page" id="ten"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>10/25</strong> | Camouflaging</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I am attached to certain objects (e.g., favorite toy, pillow, or piece of cloth) that I carry or touch to calm myself.</p> <!-- question 10 text -->
+		<a href="#eleven"  onclick="autisticAdd1(10);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#eleven"  onclick="autisticAdd2(10);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#eleven"  onclick="autisticAdd3(10);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#eleven"  onclick="autisticAdd4(10);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#eleven"  onclick="autisticAdd5(10);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#nine" id="backButton" onclick="goBack(9);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 11 PAGE -->
+<div class="page" id="eleven"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>11/25</strong> | Camouflaging</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I have expressed distress during grooming (e.g., fingernail cutting, haircutting, combing) or when touched in specific ways (e.g., feet, hair).</p> <!-- question 11 text -->
+		<a href="#twelve"  onclick="autisticAdd1(11);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#twelve"  onclick="autisticAdd2(11);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#twelve"  onclick="autisticAdd3(11);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#twelve"  onclick="autisticAdd4(11);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#twelve"  onclick="autisticAdd5(11);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#ten" id="backButton" onclick="goBack(10);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 12 PAGE -->
+<div class="page" id="twelve"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>12/25</strong> | Camouflaging</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>Certain social situations cause me to go silent or struggle to speak.</p> <!-- question 12 text -->
+		<a href="#thirteen"  onclick="autisticAdd1(12);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#thirteen"  onclick="autisticAdd2(12);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#thirteen"  onclick="autisticAdd3(12);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#thirteen"  onclick="autisticAdd4(12);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#thirteen"  onclick="autisticAdd5(12);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#eleven" id="backButton" onclick="goBack(11);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 13 PAGE -->
+<div class="page" id="thirteen"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>13/25</strong> | Camouflaging</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I am distressed by certain smells or avoid certain tastes in specific environments or situations (e.g., in public, at home).</p> <!-- question 13 text -->
+		<a href="#fourteen"  onclick="autisticAdd1(13);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#fourteen"  onclick="autisticAdd2(13);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#fourteen"  onclick="autisticAdd3(13);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#fourteen"  onclick="autisticAdd4(13);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#fourteen"  onclick="autisticAdd5(13);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#twelve" id="backButton" onclick="goBack(12);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+
+<!-- QUESTION 14 PAGE -->
+<div class="page" id="fourteen"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>14/25</strong> | Camouflaging</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I am sensitive to the texture of clothing or fabric, and this influences my clothing choices.</p> <!-- question 14 text -->
+		<a href="#fifteen"  onclick="autisticAdd1(14);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#fifteen"  onclick="autisticAdd2(14);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#fifteen"  onclick="autisticAdd3(14);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#fifteen"  onclick="autisticAdd4(14);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#fifteen"  onclick="autisticAdd5(14);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#thirteen" id="backButton" onclick="goBack(13);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+
+<!-- QUESTION 15 PAGE -->
+<div class="page" id="fifteen"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>15/25</strong> | Camouflaging</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I feel the need to rehearse conversations or social interactions in my head before engaging in them.</p> <!-- question 15 text -->
+		<a href="#sixteen"  onclick="autisticAdd1(15);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#sixteen"  onclick="autisticAdd2(15);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#sixteen"  onclick="autisticAdd3(15);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#sixteen"  onclick="autisticAdd4(15);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#sixteen"  onclick="autisticAdd5(15);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#fourteen" id="backButton" onclick="goBack(14);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 16 PAGE -->
+<div class="page" id="sixteen"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>16/25</strong> | Socializing</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I can socialize well for a period, but I often feel exhausted afterward.</p> <!-- question 16 text -->
+		<a href="#seventeen"  onclick="autisticAdd1(16);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#seventeen"  onclick="autisticAdd2(16);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#seventeen"  onclick="autisticAdd3(16);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#seventeen"  onclick="autisticAdd4(16);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#seventeen"  onclick="autisticAdd5(16);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#fifteen" id="backButton" onclick="goBack(15);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+
+<!-- QUESTION 17 PAGE -->
+<div class="page" id="seventeen"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>17/25</strong> | Socializing</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>In social situations, I sometimes hide my confusion by controlling my facial expressions to avoid standing out.</p> <!-- question 17 text -->
+		<a href="#eighteen"  onclick="autisticAdd1(17);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#eighteen"  onclick="autisticAdd2(17);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#eighteen"  onclick="autisticAdd3(17);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#eighteen"  onclick="autisticAdd4(17);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#eighteen"  onclick="autisticAdd5(17);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#sixteen" id="backButton" onclick="goBack(16);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 18 PAGE -->
+<div class="page" id="eighteen"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>18/25</strong> | Socializing</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I experience strong emotional reactions to situations, but the intensity of my emotions may vary depending on the context.</p> <!-- question 18 text -->
+		<a href="#nineteen"  onclick="autisticAdd1();" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#nineteen"  onclick="autisticAdd2(18);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#nineteen"  onclick="autisticAdd3(18);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#nineteen"  onclick="autisticAdd4(18);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#nineteen"  onclick="autisticAdd5(18);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#seventeen" id="backButton" onclick="goBack(17);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 19 PAGE -->
+<div class="page" id="nineteen"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>19/25</strong> | Socializing</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I apologize when I make a social error, depending on the situation or the person I am interacting with.</p> <!-- question 19 text -->
+		<a href="#twenty"  onclick="autisticAdd1(19);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#twenty"  onclick="autisticAdd2(19);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#twenty"  onclick="autisticAdd3(19);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#twenty"  onclick="autisticAdd4(19);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#twenty"  onclick="autisticAdd5(19);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#eighteen" id="backButton" onclick="goBack(18);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 20 PAGE -->
+<div class="page" id="twenty"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>20/25</strong> | Socializing</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I find it difficult to engage in small talk, preferring more meaningful conversations.</p> <!-- question 20 text -->
+		<a href="#twenty-one"  onclick="autisticAdd1(20);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#twenty-one"  onclick="autisticAdd2(20);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#twenty-one"  onclick="autisticAdd3(20);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#twenty-one"  onclick="autisticAdd4(20);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#twenty-one"  onclick="autisticAdd5(20);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#nineteen" id="backButton" onclick="goBack(19);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 21 PAGE -->
+<div class="page" id="twenty-one"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>21/25</strong> | Interests</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I frequently replay past social situations in my mind, thinking about what I could have done differently.</p> <!-- question 21 text -->
+		<a href="#twenty-two"  onclick="autisticAdd1(21);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#twenty-two"  onclick="autisticAdd2(21);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#twenty-two"  onclick="autisticAdd3(21);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#twenty-two"  onclick="autisticAdd4(21);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#twenty-two"  onclick="autisticAdd5(21);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#twenty" id="backButton" onclick="goBack(20);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 22 PAGE -->
+<div class="page" id="twenty-two"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>22/25</strong> | Interests</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>At any point in my life, I preferred structured or repetitive play, such as organizing objects or following patterns.</p> <!-- question 17 text -->
+		<a href="#twenty-three"  onclick="autisticAdd1();" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#twenty-three"  onclick="autisticAdd2(22);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#twenty-three"  onclick="autisticAdd3(22);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#twenty-three"  onclick="autisticAdd4(22);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#twenty-three"  onclick="autisticAdd5(22);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#twenty-one" id="backButton" onclick="goBack(21);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 23 PAGE -->
+<div class="page" id="twenty-three"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>23/25</strong> | Interests</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I have had a strong interest in certain topics or activities, regardless of social expectations or gender norms.</p> <!-- question 18 text -->
+		<a href="#twenty-four"  onclick="autisticAdd1(23);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#twenty-four"  onclick="autisticAdd2(23);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#twenty-four"  onclick="autisticAdd3(23);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#twenty-four"  onclick="autisticAdd4(23);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#twenty-four"  onclick="autisticAdd5(23);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#twenty-two" id="backButton" onclick="goBack(22);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 24 PAGE -->
+<div class="page" id="twenty-four"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>24/25</strong> | Interests</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>At some points in my life, I have had interests that were advanced or unusual for my age (e.g., opera).</p> <!-- question 19 text -->
+		<a href="#twenty-five"  onclick="autisticAdd1(24);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#twenty-five"  onclick="autisticAdd2(24);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#twenty-five"  onclick="autisticAdd3(24);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#twenty-five"  onclick="autisticAdd4(24);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#twenty-five"  onclick="autisticAdd5(24);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#twenty-three" id="backButton" onclick="goBack(23);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- QUESTION 25 PAGE -->
+<div class="page" id="twenty-five"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+		<h1><strong>25/25</strong> | Interests</h1> <!-- header title -->
+	</div>
+	
+	<div id="content" class="w3-container"> <!-- contains question and buttons content -->
+		<p>I am drawn to hobbies or interests that I can pursue with intense focus and dedication.</p> <!-- question 20 text -->
+		<a href="#twenty-six"  onclick="autisticAdd1(25);" class="w3-btn w3-flat-newbutton w3-round">Strongly disagree</a> <!-- button that links to next question when clicked & adds 1 to autism count -->
+         	<a href="#twenty-six"  onclick="autisticAdd2(25);" class="w3-btn w3-flat-newbutton w3-round">Somewhat disagree</a> <!-- button that links to next question when clicked & adds 2 to autism count -->
+		<a href="#twenty-six"  onclick="autisticAdd3(25);" class="w3-btn w3-flat-newbutton w3-round">Neither agree nor disagree</a> <!-- button that links to next question when clicked & adds 3 to autism count -->
+		<a href="#twenty-six"  onclick="autisticAdd4(25);" class="w3-btn w3-flat-newbutton w3-round">Somewhat agree</a> <!-- button that links to next question when clicked & adds 4 to autism count -->
+		<a href="#twenty-six"  onclick="autisticAdd5(25);" class="w3-btn w3-flat-newbutton w3-round">Strongly agree</a> <!-- button that links to next question when clicked & adds 5 to autism count -->
+
+		<a href="#twenty-four" id="backButton" onclick="goBack(24);"><-- Previous</a> <!-- button that links to previous page -->
+
+	</div>
+</div>
+
+
+<!-- RESULTS PAGE -->
+<div class="page" id="twenty-six"> <!-- contains page content -->
+    <div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+        <h1><strong>Results</strong></h1> <!-- header title -->
+    </div>
+    
+    <div id="content" class="w3-container"> <!-- contains results and interpretation content -->
+	<p>You've reached the end of the questionnaire! Thank you for taking the time to complete it. Click <strong>Get results</strong> to view your score.</p>
+        <a onclick="getResults()" class="w3-btn w3-flat-newbutton w3-round">Get results</a> <!-- button that changes text when clicked -->
+        <p id="results"></p> <!-- empty text where results will appear -->
+        
+        <a id="nextButton" style="display:none;" onclick="saveInterpretation(); window.location.href='#twenty-seven';" class="w3-btn w3-flat-newbutton w3-round">Next</a>
+        <p id="interpretation"></p> <!-- empty text where interpretation will appear -->
+    </div>
+</div>
+
+<!-- INTERPRETATION PAGE -->
+<div class="page" id="twenty-seven"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+        <h1><strong>What does your score mean?</strong></h1> <!-- header title -->
+    </div>
+    <div id="content" class="w3-container">
+        <p id="interpretationText"></p> <!-- empty text where interpretation will appear -->
+	<p>If you'd like to learn more, click <strong>Next</strong> to view resources for autism.</p>
+
+	<a href="#twenty-eight"; class="w3-btn w3-flat-newbutton w3-round">Next</a> <!-- button that links to next page with resources -->
+
+    </div>
 
 </div>
-		 </div>
 
-	<div class="page" id="results">
-	<div id="header" class="w3-container w3-flat-carrot">
-		<h1>Results</h1>
+
+<script>
+    // This will load the interpretation when the user navigates to the interpretation page
+    window.onload = function() {
+    // Load results immediately on the results page
+    if (window.location.hash === "#twenty-six") {
+        getResults();
+    }
+
+    // Load interpretation immediately on the interpretation page
+    if (window.location.hash === "#twenty-seven") {
+        var interpretation = localStorage.getItem("interpretationResult");
+        if (interpretation) {
+            document.getElementById("interpretationText").innerHTML = interpretation;
+        }
+    }
+};
+
+// Detect when the hash changes (i.e., navigation between pages) to dynamically load content
+window.onhashchange = function() {
+    if (window.location.hash === "#twenty-seven") {
+        var interpretation = localStorage.getItem("interpretationResult");
+        if (interpretation) {
+            document.getElementById("interpretationText").innerHTML = interpretation; // Display interpretation
+        }
+    }
+};
+</script>
+
+<!-- RESOURCES PAGE -->
+<div class="page" id="twenty-eight"> <!-- contains page content -->
+	<div id="header" class="w3-container w3-flat-newheader"> <!-- contains header content -->
+        <h1><strong>Resources</strong></h1> <!-- header title -->
+    </div>
+    <div id="content" class="w3-container">
+        <p id=resources-blurb>Online autism tests can help with self-discovery and may guide you toward seeking a formal diagnosis. Although not definitive, these tests provide useful insights.
+For next steps, check out these resources:
+
+<div id="resources" class="w3-container">
+<div id="content2" class="w3-container">
+<a href="https://awnnetwork.org/" target="_blank" class="w3-btn w3-flat-newbutton w3-round">Autistic Women & Nonbinary Network (AWN)</a> <!-- button that links to AWN website -->
+
+</p> <!-- resource blurb -->
+
+        <p>Gender-inclusive, offering newsletters, webinars, and practical resources aimed at combating stereotypes and supporting neurodivergent individuals.
+</p> <!-- resource 1 blurb -->
+</div>
+
+<div id="content2" class="w3-container">
+<a href="https://stimpunks.org/about/" target="_blank" class="w3-btn w3-flat-newbutton w3-round">Stimpunks Foundation</a> <!-- button that links to Stimpuniks website -->
+
+        <p>Empowers neurodivergent individuals, advocates for neurodivergent rights, and provides accessible resources like blogs, newsletters, and webinars.
+</p> <!-- resource 2 blurb -->
+</div>
+
+<div id="content2" class="w3-container">
+<a href="https://health.clevelandclinic.org/adult-autism-diagnosis" target="_blank" class="w3-btn w3-flat-newbutton w3-round">Cleveland Clinic - Adult Autism Diagnosis</a> <!-- button that links to Stimpuniks website -->
+
+        <p>Offers guidance on the adult diagnosis process, highlighting the importance of specialists and tools like ADOS.
+</p> <!-- resource 3 blurb -->
+</div>
+
+    </div>
 	</div>
 
-<!--Page eight is for displaying results
-Results will be displayed and computed after hitting the "See Results" button on page-->
-	
-	<div id="content" class="w3-container">
-			<p>Click the button below to find out if you are experiencing hyperthyroidism or hypothyroidism! I hope you feel better soon, and be sure to consult with your physician to screen for underlying thyroid problems!</p>
-		</div>
-	<div id="resultContainer" class="w3-container">
-		<button onclick="getResult();" class="w3-button w3-white w3-round w3-hover-green"><b>Results</b></button>
-		<!--Button to get the result using the variables stated above-->	
-		<p id="resultText"></p>
-		<button onclick="restartTest();" class="w3-button w3-white w3-round w3-hover-red"><b>Restart Test</b></button>
-		<!--Button and location so the function can perform the action--> 	
-		
-	</div>
+</div>
 
-
-
-	<footer class="w3-bottom w3-container w3-flat-carrot">
-	<p>I love DIY!</p>
-	</footer>
-
+<footer class="w3-bottom w3-container w3-flat-newheader"> <!-- contains footer content across all pages -->
+	<p>DIY!</p> <!-- footer text -->
+</footer>
 
 	
 </body>
